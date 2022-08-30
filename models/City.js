@@ -8,4 +8,4 @@ const citySchema = new mongoose.Schema({
     description: {type:String},
 })
 const City = mongoose.model("city", citySchema)
-modules.exports = City
+module.exports = City

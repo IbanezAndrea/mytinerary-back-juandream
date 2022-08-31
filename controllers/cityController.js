@@ -1,6 +1,3 @@
-const { name } = require('ejs')
-const { query } = require('express')
-const { db } = require('../models/City')
 const City = require('../models/City')
 
 const cityController = {

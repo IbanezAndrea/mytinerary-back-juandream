@@ -5,14 +5,14 @@ const cityController = {
         try {
             let city = await new City(req.body).save()
             res.status("201").json({
-                message: "a new city has been added",
+                message: "A new city has been added.",
                 response: city._id,
                 succes: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "could't add city",
+                message: "Your city could not be added.",
                 succes: false,
             })
         }
@@ -23,44 +23,51 @@ const cityController = {
             let city = await City.findOne({ _id: id })
             if (city) {
                 res.status("200").json({
-                    message: "you get one city",
+                    message: "Found a city.",
                     response: city,
                     succes: true,
                 })
             } else {
                 res.status("404").json({
-                    message: "could't find city",
+                    message: "The city could not be found.",
                     succes: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "error",
+                message: "Error",
                 succes: false,
             })
         }
     },
-    getCities: async (req, res)=>{
-        const query = req.query
-        try {
-            let cities = await City.find(query? query:null)
-            if (cities) {
-                res.status("200").json({
-                    message: "you get cities",
-                    response: cities,
-                    succes: true,
-                })
-            } else {
-                res.status("404").json({
-                    message: "could't find cities",
-                    succes: false,
-                })
-            }
-        } catch (error) {
-            console.log(error)
+
+getCities: async (req, res)=>{
+    const query = req.query
+    let cities
+            if(query.city){
+                    let regExp= new RegExp(`^${query.city}`)
+                    query.city= regExp
+                }
+    try {
+        cities = await City.find(query? query:null)
+        if (cities) {
+            res.status("200").json({
+                message: "The following cities were found.",
+                response: cities,
+                succes: true,
+            })
+        } else {
+            res.status("404").json({
+                message: "No cities could be found...",
+                succes: false,
+            })
         }
-    },
+    } catch (error) {
+        console.log(error)
+    }
+},
+
     modifyCity: async (req, res)=>{
         const { id } = req.params
         let putCity = {}
@@ -68,20 +75,20 @@ const cityController = {
             putCity = await City.findOneAndUpdate({_id:id},req.body,{new:true})
             if (putCity) {
                 res.status("200").json({
-                    message: "you update one city",
+                    message: "You have updated acity.",
                     response: putCity,
                     succes: true,
                 })
             } else {
                 res.status("404").json({
-                    message: "could't find city",
+                    message: "Could not find the city.",
                     succes: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "error",
+                message: "Error",
                 succes: false,
             })
         }
@@ -91,13 +98,13 @@ const cityController = {
         try {
             await City.findOneAndDelete({ _id: id })
             res.status("200").json({
-                message: "you delete one city",
+                message: "You deleted a city.",
                 succes: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "error",
+                message: "Error",
                 succes: false,
             })
         }

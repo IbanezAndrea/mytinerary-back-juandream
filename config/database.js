@@ -7,6 +7,6 @@ mongoose.connect(
             useNewUrlParser: true
         }
     )
-    .then(()=>console.log('conected to database successfully'))
+    .then(()=>console.log('connected to database successfully 🐙'))
     .catch(error=>console.log(error))
     

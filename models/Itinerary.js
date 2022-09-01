@@ -8,5 +8,5 @@ const itinerarySchema = new mongoose.Schema({
     tags: {type: Array, required:true},
     duration: {type: Number, required: true },
 })
-const Itinerary = mongoose.model("city", itinerarySchema)
+const Itinerary = mongoose.model("itinerary", itinerarySchema)
 module.exports = Itinerary

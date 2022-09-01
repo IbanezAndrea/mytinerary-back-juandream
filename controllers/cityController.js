@@ -46,7 +46,7 @@ getCities: async (req, res)=>{
     const query = req.query
     let cities
             if(query.city){
-                    let regExp= new RegExp(`^${query.city}`)
+                    let regExp= new RegExp(`^${query.city}`,"i")
                     query.city= regExp
                 }
     try {

@@ -7,7 +7,7 @@ const mongoose= require ('mongoose')
         }
     );
 
-    const Comment = mongoose.model("comment",commentSchema);
+    const Comment = mongoose.model("comments",commentSchema);
 
 
 module.exports = Comment

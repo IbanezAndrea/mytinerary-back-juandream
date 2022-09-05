@@ -19,8 +19,12 @@ const itineraryController = {
     },
     getItineraries: async (req, res) => {
         let itineraries
+        let query = {}
+        if(req.query.city){
+            query.city = req.query.city
+        }
         try {
-            itineraries = await Itinerary.find()
+            itineraries = await Itinerary.find(query)
             if (itineraries) {
                 res.status("200").json({
                     message: "The following itineraries were found.",

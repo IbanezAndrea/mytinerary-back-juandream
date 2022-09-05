@@ -43,14 +43,14 @@ const cityController = {
     },
 
 getCities: async (req, res)=>{
-    const query = req.query
+    const query = {}
     let cities
-            if(query.city){
-                    let regExp= new RegExp(`^${query.city}`,"i")
-                    query.city= regExp
-                }
+    if(req.query.city){
+        let regExp= new RegExp(`^${req.query.city}`,"i")
+        query.city= regExp
+    }
     try {
-        cities = await City.find(query? query:null)
+        cities = await City.find(query)
         if (cities) {
             res.status("200").json({
                 message: "The following cities were found.",

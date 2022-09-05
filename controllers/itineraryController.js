@@ -19,10 +19,10 @@ const itineraryController = {
     },
     getItineraries: async (req, res) => {
         let itineraries
-        let query = req.query
-            if(!query.city){
-                    query = null
-                }
+        let query = {}
+        if(req.query.city){
+            query.city = req.query.city
+        }
         try {
             itineraries = await Itinerary.find(query)
             if (itineraries) {

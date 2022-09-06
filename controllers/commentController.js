@@ -1,32 +1,32 @@
-const User = require('../models/User');
+const Comment = require("../models/Comment");
 
-const userController ={
-    createUser: async (req, res) => {
+
+const commentController ={
+
+    addComment: async (req, res) => {
         try {
-            let user = await new User(req.body).save()
+            let comment = await new Comment(req.body).save()
             res.status("201").json({
-                message: "User created ✔",
-                response: user._id,
+                message: "Your comment has been posted!",
+                response: comment._id,
                 succes: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "Something went wrong ❌",
+                message: "There is something wrong with your comment...",
                 succes: false,
             })
         }
-    },
-    getUser: async (req, res) => {
+    },   
+    getComment: async (req, res) => {
         const { id } = req.params
-        
         try {
-            let user = await User.findOne({ _id: id })
-                .populate('itineraries', {name:1, city:1})
-            if (user) {
+            let comment = await Comment.findOne({ _id: id })
+            if (comment) {
                 res.status("200").json({
-                    message: "Found ✔",
-                    response: user,
+                    message: "Comment found ✔",
+                    response: comment,
                     succes: true,
                 })
             } else {
@@ -43,65 +43,70 @@ const userController ={
             })
         }
     },
-    getUsers: async (req, res) => {
-        let users
+    getComments: async (req, res) => {
+        let comments
         let query = {}
-        if(req.query.users){
-            query.users= req.query.users
+        if(req.query.itinerary){
+            query.itinerary = req.query.itinerary
+        }
+        if (req.query.user) {
+            query.user = req.query.user
         }
         try {
-            users = await User.find(query)
-            if (users) {
+            comments = await Comment.find(query)
+            .populate("user",{name:1, lastName:1, country:1, photo:1})
+            .populate("itinerary",{name:1})
+            if (comments) {
                 res.status("200").json({
-                    message: "Users found!",
-                    response: users,
+                    message: "The following comments were found.",
+                    response: comments,
                     succes: true,
             })
             } else {
                 res.status("404").json({
-                    message: "No users could be found...",
+                    message: "No comments could be found...",
                     succes: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "error",
+                message: "Your comment could not be added.",
                 succes: false,
             })
         }
     },
-    modifyUser: async (req, res)=>{
+    modifyComment: async (req, res) => {
         const { id } = req.params
-        let putUser = {}
+        let comment
         try {
-            putUser= await User.findOneAndUpdate({_id:id},req.body,{new:true})
-            if (putUser) {
+            comment = await Comment.findOneAndUpdate({ _id: id }, req.body, { new: true })
+            if (comment) {
                 res.status("200").json({
-                    message: "User updated.",
-                    response: putUser,
+                    message: "You editted your comment.",
+                    response: comment,
                     succes: true,
                 })
             } else {
                 res.status("404").json({
-                    message: "this User does not exist.",
+                    message: "Could not find the comment...",
                     succes: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "Error",
+                message: "Your comment could not be found.",
                 succes: false,
             })
         }
     },
-    removeUser: async (req, res) => {
+    removeComment: async (req, res) => {
         const { id } = req.params
         try {
-            await User.findOneAndDelete({ _id: id })
+            await Comment.findOneAndRemove({ _id: id })
             res.status("200").json({
-                message: "You deleted an User.",
+                message: "You deleted your comment.",
                 succes: true,
             })
         } catch (error) {
@@ -114,4 +119,4 @@ const userController ={
     }
 }
 
-module.exports =userController;
+module.exports = commentController

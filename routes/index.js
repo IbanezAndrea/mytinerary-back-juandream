@@ -4,6 +4,8 @@ const citiesRouter= require('./cities');
 const userRoutes = require('./users');
 const itinerariesRoutes = require('./itineraries')
 const commentsRoutes =require ('./comments')
+const activitiesRoutes = require('./activities')
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render( 'index', {title: 'Tu vieja'});
@@ -11,7 +13,8 @@ router.get('/', function(req, res, next) {
 
 router.use('/cities',citiesRouter);
 router.use('/auth',userRoutes);
-router.use("/itineraries", itinerariesRoutes)
-router.use("/comments", commentsRoutes)
+router.use("/itineraries", itinerariesRoutes);
+router.use("/comments", commentsRoutes);
+router.use("/activities", activitiesRoutes);
 
 module.exports = router;

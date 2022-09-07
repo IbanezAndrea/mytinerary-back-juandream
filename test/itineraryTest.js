@@ -31,16 +31,16 @@ describe("POST/itineraries", ()=>{
             })
         })
         
-    // it ("Must respond with 400 status code", function(done){
-    //     request(app)
-    //         .post("/itineraries")
-    //         .send({})
-    //         .expect(400)
-    //         .end((err, res) => {
-    //             if (err) return done(err)
-    //             return done()
-    //         })
-    //     })
+    it ("Must respond with 400 status code", function(done){
+        request(app)
+            .post("/itineraries")
+           .send({})
+            .expect(400)
+            .end((err, res) => {
+                 if (err) return done(err)
+                 return done()
+            })
+        })
 
 
     })

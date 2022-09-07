@@ -1,30 +1,32 @@
-const Itinerary = require("../models/Itinerary")
+const Comment = require("../models/Comment");
 
-const itineraryController = {
-    addItinerary: async (req, res) => {
+
+const commentController ={
+
+    addComment: async (req, res) => {
         try {
-            let itinerary = await new Itinerary(req.body).save()
+            let comment = await new Comment(req.body).save()
             res.status("201").json({
-                message: "A new itinerary has been added.",
-                response: itinerary._id,
+                message: "Your comment has been posted!",
+                response: comment._id,
                 succes: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "Your itinerary could not be added.",
+                message: "There is something wrong with your comment...",
                 succes: false,
             })
         }
-    },
-    getItinerary: async (req, res) => {
+    },   
+    getComment: async (req, res) => {
         const { id } = req.params
         try {
-            let itinerary = await Itinerary.findOne({ _id: id })
-            if (itinerary) {
+            let comment = await Comment.findOne({ _id: id })
+            if (comment) {
                 res.status("200").json({
-                    message: "Found itinerary✔",
-                    response: itinerary,
+                    message: "Comment found ✔",
+                    response: comment,
                     succes: true,
                 })
             } else {
@@ -41,70 +43,70 @@ const itineraryController = {
             })
         }
     },
-    getItineraries: async (req, res) => {
-        let itineraries
+    getComments: async (req, res) => {
+        let comments
         let query = {}
-        if(req.query.city){
-            query.city = req.query.city
+        if(req.query.itinerary){
+            query.itinerary = req.query.itinerary
         }
         if (req.query.user) {
             query.user = req.query.user
         }
         try {
-            itineraries = await Itinerary.find(query)
-            .populate("user",{name:1})
-            .populate("city",{city:1})
-            if (itineraries) {
+            comments = await Comment.find(query)
+            .populate("user",{name:1, lastName:1, country:1, photo:1})
+            .populate("itinerary",{name:1})
+            if (comments) {
                 res.status("200").json({
-                    message: "The following itineraries were found.",
-                    response: itineraries,
+                    message: "The following comments were found.",
+                    response: comments,
                     succes: true,
             })
             } else {
                 res.status("404").json({
-                    message: "No itineraries could be found...",
+                    message: "No comments could be found...",
                     succes: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "Your itinerary could not be added.",
+                message: "Your comment could not be added.",
                 succes: false,
             })
         }
     },
-    modifyItinerary: async (req, res) => {
+    modifyComment: async (req, res) => {
         const { id } = req.params
-        let itinerary
+        let comment
         try {
-            itinerary = await Itinerary.findOneAndUpdate({ _id: id }, req.body, { new: true })
-            if (itinerary) {
+            comment = await Comment.findOneAndUpdate({ _id: id }, req.body, { new: true })
+            if (comment) {
                 res.status("200").json({
-                    message: "You have updated an itinerary.",
-                    response: itinerary,
+                    message: "You editted your comment.",
+                    response: comment,
                     succes: true,
                 })
             } else {
                 res.status("404").json({
-                    message: "Could not find the itinerary.",
+                    message: "Could not find the comment...",
                     succes: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "Your itinerary could not be found.",
+                message: "Your comment could not be found.",
                 succes: false,
             })
         }
     },
-    removeItinerary: async (req, res) => {
+    removeComment: async (req, res) => {
         const { id } = req.params
         try {
-            await Itinerary.findOneAndRemove({ _id: id })
+            await Comment.findOneAndRemove({ _id: id })
             res.status("200").json({
-                message: "You deleted a itinerary.",
+                message: "You deleted your comment.",
                 succes: true,
             })
         } catch (error) {
@@ -117,4 +119,4 @@ const itineraryController = {
     }
 }
 
-module.exports = itineraryController
+module.exports = commentController

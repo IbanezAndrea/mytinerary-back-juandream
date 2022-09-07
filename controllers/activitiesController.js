@@ -1,30 +1,32 @@
-const Itinerary = require("../models/Itinerary")
+const Activity= require('../models/Activity')
 
-const itineraryController = {
-    addItinerary: async (req, res) => {
+
+const activitiesController ={
+
+    createActivity: async (req, res) => {
         try {
-            let itinerary = await new Itinerary(req.body).save()
+            let activity = await new Activity(req.body).save()
             res.status("201").json({
-                message: "A new itinerary has been added.",
-                response: itinerary._id,
+                message: "Activity created!",
+                response: activity._id,
                 succes: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "Your itinerary could not be added.",
+                message: "There is something wrong...",
                 succes: false,
             })
         }
-    },
-    getItinerary: async (req, res) => {
+    },   
+    getActivity: async (req, res) => {
         const { id } = req.params
         try {
-            let itinerary = await Itinerary.findOne({ _id: id })
-            if (itinerary) {
+            let activity = await Activity.findOne({ _id: id })
+            if (activity) {
                 res.status("200").json({
-                    message: "Found itinerary✔",
-                    response: itinerary,
+                    message: "activity found ✔",
+                    response: activity,
                     succes: true,
                 })
             } else {
@@ -41,70 +43,66 @@ const itineraryController = {
             })
         }
     },
-    getItineraries: async (req, res) => {
-        let itineraries
+    getActivities: async (req, res) => {
+        let activities
         let query = {}
-        if(req.query.city){
-            query.city = req.query.city
-        }
-        if (req.query.user) {
-            query.user = req.query.user
+        if(req.query.itinerary){
+            query.itinerary = req.query.itinerary
         }
         try {
-            itineraries = await Itinerary.find(query)
-            .populate("user",{name:1})
-            .populate("city",{city:1})
-            if (itineraries) {
+            activities = await Activity.find(query)
+            .populate("itinerary",{name:1})
+            if (activities) {
                 res.status("200").json({
-                    message: "The following itineraries were found.",
-                    response: itineraries,
+                    message: "The following activities were found.",
+                    response: activities,
                     succes: true,
             })
             } else {
                 res.status("404").json({
-                    message: "No itineraries could be found...",
+                    message: "No activities could be found...",
                     succes: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "Your itinerary could not be added.",
+                message: "Your activity could not be added.",
                 succes: false,
             })
         }
     },
-    modifyItinerary: async (req, res) => {
+    modifyActivity: async (req, res) => {
         const { id } = req.params
-        let itinerary
+        let activities
         try {
-            itinerary = await Itinerary.findOneAndUpdate({ _id: id }, req.body, { new: true })
-            if (itinerary) {
+            activities = await Activity.findOneAndUpdate({ _id: id }, req.body, { new: true })
+            if (activities) {
                 res.status("200").json({
-                    message: "You have updated an itinerary.",
-                    response: itinerary,
+                    message: "Content updated.",
+                    response: activities,
                     succes: true,
                 })
             } else {
                 res.status("404").json({
-                    message: "Could not find the itinerary.",
+                    message: "Could not find it...",
                     succes: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
-                message: "Your itinerary could not be found.",
+                message: "error",
                 succes: false,
             })
         }
     },
-    removeItinerary: async (req, res) => {
+    removeActivity: async (req, res) => {
         const { id } = req.params
         try {
-            await Itinerary.findOneAndRemove({ _id: id })
+            await Activity.findOneAndRemove({ _id: id })
             res.status("200").json({
-                message: "You deleted a itinerary.",
+                message: "Deleted ✔",
                 succes: true,
             })
         } catch (error) {
@@ -117,4 +115,4 @@ const itineraryController = {
     }
 }
 
-module.exports = itineraryController
+module.exports = activitiesController

@@ -1,10 +1,10 @@
 const User = require('../models/User');
 const crypto = require('crypto')
-const bcryptjs = require('bcryptjs')
+var bcryptjs = require('bcryptjs');
 
 const userController ={
     userSingUp: async (req, res) => {
-            const {
+            let {
                 name,
                 photo,
                 email,

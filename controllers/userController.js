@@ -1,9 +1,9 @@
 const User = require('../models/User');
 const crypto = require('crypto')
-var bcryptjs = require('bcryptjs');
-
+const bcryptjs = require('bcryptjs');
+const sendMail = require('./sendMail')
 const userController ={
-    userSingUp: async (req, res) => {
+    userSignUp: async (req, res) => {
             let {
                 name,
                 photo,
@@ -18,42 +18,42 @@ const userController ={
                     let logged = false;
                     let verified = false;
                     let code =  crypto
-                    .randomBytes(15)
-                    .toString('hex')
-                            if(from === 'form'){ //from form
-                                passsword = bcryptjs.hashSync(pass,10);
-                                user = await new User({name,photo,email,password:[passsword],role,from:[from],logged,verified,code}).save()
-                                //verification email here
-                                    res.status(201).json({
-                                        message: "User signed ✔",
-                                        success: true,
-                                            })
-                                } else{ // from socialmedia
-                                    pass = bcryptjs.hashSync(pass,10);
-                                    verified = true,
-                                    user = await new User({name,photo,email,password:[passsword],role,from:[from],logged}).save()
-                                    res.status(201).json(
-                                            {
-                                                message: "User signed from "+from,
-                                                success: true,
-                                            })
-                                    } 
-                                } else{ //If user exists
-                                    if(user.from.includes(from)){ //if user from property includes from["google"] like so
-                                        res.status(200).json({
-                                            message: "User already exists...",
-                                            success: false 
-                                        })
+                        .randomBytes(15)
+                        .toString('hex')
+                    if(from === 'form'){ //from form
+                        passsword = bcryptjs.hashSync(pass,10);
+                        user = await new User({ name, photo, email, password: [passsword], role, from: [from], logged, verified, code }).save()
+                        sendMail(email,code)
+                        res.status(201).json({
+                            message: "User signed ✔",
+                            success: true,
+                            })
+                    } else{ // from socialmedia
+                        pass = bcryptjs.hashSync(pass,10);
+                        verified = true,
+                        user = await new User({ name, photo, email, password: [passsword], role, from: [from], logged }).save()
+                        res.status(201).json({
+                            message: "User signed from "+from,
+                            success: true,
+                        })
+                    } 
+                } else{ //If user exists
+                    if(user.from.includes(from)){ //if user from property includes from["google"] like so
+                        res.status(200).json({
+                            message: "User already exists...",
+                            success: false 
+                        })
                     } else{  // ===> user.from = ['google','facebook'] includes from other socialmedia
-                            user.from.push(from);
-                            user.verified = true;
-                            user.password.push(bcryptjs.hashSync(pass,10))
-                                await user.save()
-                                    res.status(201).json({
-                                        message: "User signed up from "+from,
-                                        success: true
-                                        })
-                                    }}
+                        user.from.push(from);
+                        user.verified = true;
+                        user.password.push(bcryptjs.hashSync(pass,10))
+                        await user.save()
+                        res.status(201).json({
+                            message: "User signed up from "+from,
+                            success: true
+                            })
+                    }
+                }
                     }catch (error){
                         console.log(error)
                                                 

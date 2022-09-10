@@ -6,6 +6,7 @@ const userController ={
     userSignUp: async (req, res) => {
             let {
                 name,
+                lastName,
                 photo,
                 email,
                 passsword,
@@ -15,14 +16,14 @@ const userController ={
         try{
             let user = await User.findOne({email})
                 if (!user){
-                    let logged = false;
+                    let loggedIn = false;
                     let verified = false;
                     let code =  crypto
                         .randomBytes(15)
                         .toString('hex')
                     if(from === 'form'){ //from form
                         passsword = bcryptjs.hashSync(pass,10);
-                        user = await new User({ name, photo, email, password: [passsword], role, from: [from], logged, verified, code }).save()
+                        user = await new User({ name, lastName, photo, email, password: [passsword], role, from: [from], loggedIn, verified, code }).save()
                         sendMail(email,code)
                         res.status(201).json({
                             message: "User signed ✔",
@@ -31,7 +32,7 @@ const userController ={
                     } else{ // from socialmedia
                         pass = bcryptjs.hashSync(pass,10);
                         verified = true,
-                        user = await new User({ name, photo, email, password: [passsword], role, from: [from], logged }).save()
+                        user = await new User({ name, lastName, photo, email, password: [passsword], role, from: [from], logged }).save()
                         res.status(201).json({
                             message: "User signed from "+from,
                             success: true,

@@ -8,8 +8,9 @@ const userController ={
                 name,
                 lastName,
                 photo,
+                country,
                 email,
-                passsword,
+                password,
                 role,
                 from
             }= req.body
@@ -22,17 +23,17 @@ const userController ={
                         .randomBytes(15)
                         .toString('hex')
                     if(from === 'form'){ //from form
-                        passsword = bcryptjs.hashSync(pass,10);
-                        user = await new User({ name, lastName, photo, email, password: [passsword], role, from: [from], loggedIn, verified, code }).save()
+                        password = bcryptjs.hashSync(password,10);
+                        user = await new User({ name, lastName, photo, country, email, password: [password], role, from: [from], loggedIn, verified, code }).save()
                         sendMail(email,code)
                         res.status(201).json({
                             message: "User signed ✔",
                             success: true,
                             })
                     } else{ // from socialmedia
-                        pass = bcryptjs.hashSync(pass,10);
+                        password = bcryptjs.hashSync(password,10);
                         verified = true,
-                        user = await new User({ name, lastName, photo, email, password: [passsword], role, from: [from], logged }).save()
+                        user = await new User({ name, lastName, photo, country, email, password: [password], role, from: [from], loggedIn }).save()
                         res.status(201).json({
                             message: "User signed from "+from,
                             success: true,
@@ -55,14 +56,14 @@ const userController ={
                             })
                     }
                 }
-                    }catch (error){
-                        console.log(error)
-                                                
-                        res.status(400).json({
-                        message: "could't signed up",
-                        success: false
-                            })
-                        }},
+        }catch (error){
+            console.log(error)  
+            res.status(400).json({
+                message: "could't signed up",
+                success: false
+                })
+        }
+    },
 
     getUser: async (req, res) => {
         const { id } = req.params

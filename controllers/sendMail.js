@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer")
 const { google } = require("googleapis")
 const OAuth2 = google.auth.OAuth2
-
+const verifyMail = require("../views/verify-mail")
 const {
     GOOGLE_ID,
     GOOGLE_SECRET,
@@ -37,11 +37,7 @@ const sendMail = async (mail, code) => {
         form: GOOGLE_USER,
         to: mail,
         subject: "Verified your account 🐙",
-        html: 
-            `<div>
-                ${code}
-            </div>`,
-        //colocar el template del correo aca
+        html: verifyMail(mail,code)
         
     }
     await transport.sendMail(mailOptions, (error, response) => {

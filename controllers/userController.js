@@ -33,7 +33,7 @@ const userController ={
                     } else{ // from socialmedia
                         password = bcryptjs.hashSync(password,10);
                         verified = true,
-                        user = await new User({ name, lastName, photo, country, email, password: [password], role, from: [from], loggedIn }).save()
+                        user = await new User({ name, lastName, photo, country, email, password: [password], role, from: [from], loggedIn, verified, code }).save()
                         res.status(201).json({
                             message: "User signed from "+from,
                             success: true,

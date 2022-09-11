@@ -6,8 +6,8 @@ const activities = require('./models/Activity')
 let items= [
     {
     "name":"The Perfect Weekend" ,
-    "user":"6312681193f3c2121f38cf56" ,
-    "city": "6311302e70a548ffd1ed5d5f",
+    "user":"631e04b22b99af3aa1792c56" ,
+    "city": "631c3eece2b623a437e6c43e",
     "price": "5",
     "likes": ["1"],
     "tags":["VegasBB","Weekend","USA"],
@@ -16,8 +16,8 @@ let items= [
     },
     {
     "name":"EPIC LAS VEGAS" ,
-    "user":"6312681193f3c2121f38cf56" ,
-    "city": "6311302e70a548ffd1ed5d5f",
+    "user":"631e04b22b99af3aa1792c56" ,
+    "city": "631c3eece2b623a437e6c43e",
     "price": "4",
     "likes": ["1"],
     "tags":["VegasBB","Lovesummer","USA"],
@@ -26,8 +26,8 @@ let items= [
     },
     {
     "name":"3 Days in Vegas" ,
-    "user":"631258d85b6dd57b0bd6a913" ,
-    "city": "6311302e70a548ffd1ed5d5f",
+    "user":"631e02ab2b99af3aa1792c4f" ,
+    "city": "631c3eece2b623a437e6c43e",
     "price": "4",
     "likes": ["1"],
     "tags":["USA","LasVegas","Party"],
@@ -36,8 +36,8 @@ let items= [
     },
     {
     "name":"The Perfect 3 Days in Rio de Janeiro" ,
-    "user":"6312681193f3c2121f38cf55" ,
-    "city": "6311302e70a548ffd1ed5d60",
+    "user":"631e04432b99af3aa1792c53" ,
+    "city": "631c3eece2b623a437e6c43f",
     "price": "2",
     "likes": ["1"],
     "tags":["RIO", "SouthAmerica", "Brazil"],
@@ -46,8 +46,8 @@ let items= [
     },
     {
     "name":" Isla del sol" ,
-    "user":"631258d85b6dd57b0bd6a913" ,
-    "city": "6311302e70a548ffd1ed5d60",
+    "user":"631e02ab2b99af3aa1792c4f" ,
+    "city": "631c3eece2b623a437e6c43f",
     "price": "2",
     "likes": ["1"],
     "tags":["RIO","SouthAmerica", "Brazil"],
@@ -56,8 +56,8 @@ let items= [
     },
     {
     "name":" A One-Week Rio de Janeiro " ,
-    "user":"6312681193f3c2121f38cf55" ,
-    "city": "6311302e70a548ffd1ed5d60",
+    "user":"631e04432b99af3aa1792c53" ,
+    "city": "631c3eece2b623a437e6c43f",
     "price": "4",
     "likes": ["1"],
     "tags":["RIO","SouthAmerica", "Brazil"],
@@ -66,8 +66,8 @@ let items= [
     },
     {
         "name":" How to spend a week in Sydney " ,
-        "user":"6312681193f3c2121f38cf55" ,
-        "city": "6311302e70a548ffd1ed5d5e",
+        "user":"631e04432b99af3aa1792c53" ,
+        "city": "631c3eece2b623a437e6c43d",
         "price": "5",
         "likes": ["1"],
         "tags": ["Travel", "nature"],
@@ -76,8 +76,8 @@ let items= [
         },
     {
         "name":"3 Days in Ibiza: The ultimate weekend " ,
-        "user":"6312681193f3c2121f38cf56" ,
-        "city": "6311302e70a548ffd1ed5d5b",
+        "user":"631e04b22b99af3aa1792c56" ,
+        "city": "631c3eece2b623a437e6c43a",
         "price": "5",
         "likes": ["1"],
         "tags": ["Spain", "Summer" , "Europe"],
@@ -86,8 +86,8 @@ let items= [
         },
     {
         "name": "London Public Buses Audio Tour",
-        "user": "6312681193f3c2121f38cf55",
-        "city": "6311302e70a548ffd1ed5d5a",
+        "user": "631e04432b99af3aa1792c53",
+        "city": "631c3eece2b623a437e6c439",
         "price": "3",
         "likes": ["1"],
         "tags": [
@@ -98,8 +98,8 @@ let items= [
     },
     {
         "name": "British Museum Highlights Private Guided Tour",
-        "user": "6312681193f3c2121f38cf56",
-        "city": "6311302e70a548ffd1ed5d5a",
+        "user": "631e04b22b99af3aa1792c56",
+        "city": "631c3eece2b623a437e6c439",
         "price": "3",
         "likes": ["1"],
         "tags": [
@@ -110,8 +110,8 @@ let items= [
     },
     {
         "name": "London Private One Day Tour with a Local",
-        "user": "631258d85b6dd57b0bd6a913",
-        "city": "6311302e70a548ffd1ed5d5a",
+        "user": "631e02ab2b99af3aa1792c4f",
+        "city": "631c3eece2b623a437e6c439",
         "price": "4",
         "likes": ["1"],
         "tags": ["tea", "drinks", "food"],
@@ -120,8 +120,8 @@ let items= [
     },
     {
         "name": "Nightlife Osaka Food Tour",
-        "user": "6312681193f3c2121f38cf55",
-        "city": "6311302e70a548ffd1ed5d61",
+        "user": "631e04432b99af3aa1792c53",
+        "city": "631c3eece2b623a437e6c440",
         "price": "4",
         "likes": ["1"],
         "tags": [
@@ -132,8 +132,8 @@ let items= [
     },
     {
         "name": " Osaka's Best and Brightest by Private Vehicle",
-        "user": "631258d85b6dd57b0bd6a913",
-        "city": "6311302e70a548ffd1ed5d61",
+        "user": "631e02ab2b99af3aa1792c4f",
+        "city": "631c3eece2b623a437e6c440",
         "price": "4",
         "likes": ["1"],
         "tags": [
@@ -144,8 +144,8 @@ let items= [
     },
     {
         "name": "Amsterdam Canal Cruise in Classic River Boat With Drinks & Dutch Cheese",
-        "user": "631258d85b6dd57b0bd6a913",
-        "city": "6311302e70a548ffd1ed5d64",
+        "user": "631e02ab2b99af3aa1792c4f",
+        "city": "631c3eece2b623a437e6c443",
         "price": "2",
         "likes": ["1"],
         "tags": [
@@ -156,8 +156,8 @@ let items= [
     },
     {
         "name": "Anne Frank Guided Walking Tour through Amsterdam's Jewish Quarter",
-        "user": "631258d85b6dd57b0bd6a913",
-        "city": "6311302e70a548ffd1ed5d64",
+        "user": "631e02ab2b99af3aa1792c4f",
+        "city": "631c3eece2b623a437e6c443",
         "price": "2",
         "likes": ["1"],
         "tags": [

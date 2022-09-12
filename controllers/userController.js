@@ -64,10 +64,31 @@ const userController ={
                 })
         }
     },
+    verifyMail: async (req, res) => {
+        const {code} = req.params
+        try {
+            let user = await User.findOne({ code })
+            if (user) {
+                user.verified = true
+                await user.save()
+                res.status("200").redirect(301, 'http://localhost:3000/signin')
 
+            } else {
+                res.status("404").json({
+                    message: "This email does not belong to an account ❌",
+                    success: false,
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            res.status("400").json({
+                message: "Error",
+                success: false,
+            })
+        }
+    },
     getUser: async (req, res) => {
         const { id } = req.params
-        
         try {
             let user = await User.findOne({ _id: id })
                 .populate('itineraries', {name:1, city:1})

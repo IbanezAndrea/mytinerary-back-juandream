@@ -1,4 +1,4 @@
-const verifyMail = (mail,code) => {
+const verifyMail = (mail,code,url) => {
     return`<div style="margin: 0 auto;padding: 1rem 0;-webkit-text-size-adjust: 100%;background-color: #eabf9f;color: #1e212d;max-width: 600px;min-width:320px">
         <img
             src="https://cdn.templates.unlayer.com/assets/1623940935068-plane.png"
@@ -28,7 +28,7 @@ const verifyMail = (mail,code) => {
                     </p>
                 </div>
                 <div style="padding:10px;">
-                    <a href="http://localhost:3000/auth/verify/${code}" target="_blank"
+                    <a href="${url + code}" target="_blank"
                         style="font-family:arial,helvetica,sans-serif;
                         text-decoration: none;text-align: center;color: #FFFFFF;
                         background-color: #b68973;

@@ -36,8 +36,8 @@ const sendMail = async (mail, code) => {
     const mailOptions = {
         form: GOOGLE_USER,
         to: mail,
-        subject: "Verified your account 🐙",
-        html: verifyMail(mail,code)
+        subject: "Join the Chtulhu army! 🐙",
+        html: verifyMail(mail,code, "http://localhost:4000/auth/acc/")
         
     }
     await transport.sendMail(mailOptions, (error, response) => {

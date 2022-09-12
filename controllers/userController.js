@@ -87,6 +87,82 @@ const userController ={
             })
         }
     },
+    userSignIn: async (req,res) =>{
+            const {email, password, from} = req.body
+        try{
+            const user= await User.findOne({email})
+                if (!user){
+                res.status(404).json({
+                    success:false,
+                    message: "User does not exist, please sign up!"
+                })
+            }else if (user.verified){
+                    const checkPass= user.password.filter(passwordElement=> bcryptjs.compareSync(password, passwordElement))
+                if(from === 'form'){ // If user tries to log by form
+                        if(checkPass.length > 0){// if password matches
+                            const loginUser= {
+                                id:user._id,
+                                name: user.name,
+                                email: user.email,
+                                role: user.role,
+                                from: user.from,
+                                photo:user.photo
+                            }
+
+                            user.loggedIn = true
+                            await user.save()
+                            
+                            res.status(200).json({
+                                success:true,
+                                response: {user: loginUser},
+                                message: "Welcome " + user.name
+                            })
+                        }else{ // if password does not match
+                            res.status(400).json({
+                                success:false,
+                                message: "Wrong username or password ❌"
+                            })
+                        }
+                }else{ // If user tries to log by socialmedia
+                    if(checkPass.length > 0){// if password matches
+                        const loginUser= {
+                            id:user._id,
+                            name: user.name,
+                            email: user.email,
+                            role: user.role,
+                            from: user.from,
+                            photo:user.photo
+                        }
+
+                        user.loggedIn = true
+                        await user.save()
+                        
+                        res.status(200).json({
+                            success:true,
+                            response: {user: loginUser},
+                            message: "Welcome " + user.name
+                        })
+                    }else{ // if password does not match
+                        res.status(400).json({
+                            success:false,
+                            message: "Invalid credentials ❌"
+                            })
+                        }
+                    }
+            }else{ // If user exists but is not verified
+                res.status(401).json({
+                    success:false,
+                    message: "Please, verify your email account and try again..."
+                })
+            }
+        }catch (error){
+            console.log(error)
+            res.status(400).json({
+                success:false,
+                message: "Error signing in ❌"
+            })
+        }
+    },
     getUser: async (req, res) => {
         const { id } = req.params
         try {

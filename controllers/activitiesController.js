@@ -9,13 +9,13 @@ const activitiesController ={
             res.status("201").json({
                 message: "Activity created!",
                 response: activity._id,
-                succes: true,
+                success: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "There is something wrong...",
-                succes: false,
+                success: false,
             })
         }
     },   
@@ -27,19 +27,19 @@ const activitiesController ={
                 res.status("200").json({
                     message: "activity found ✔",
                     response: activity,
-                    succes: true,
+                    success: true,
                 })
             } else {
                 res.status("404").json({
                     message: "Coud not be found ❌",
-                    succes: false,
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Error",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -56,19 +56,19 @@ const activitiesController ={
                 res.status("200").json({
                     message: "The following activities were found.",
                     response: activities,
-                    succes: true,
+                    success: true,
             })
             } else {
                 res.status("404").json({
                     message: "No activities could be found...",
-                    succes: false,
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Your activity could not be added.",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -81,19 +81,19 @@ const activitiesController ={
                 res.status("200").json({
                     message: "Content updated.",
                     response: activities,
-                    succes: true,
+                    success: true,
                 })
             } else {
                 res.status("404").json({
                     message: "Could not find it...",
-                    succes: false,
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "error",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -103,13 +103,13 @@ const activitiesController ={
             await Activity.findOneAndRemove({ _id: id })
             res.status("200").json({
                 message: "Deleted ✔",
-                succes: true,
+                success: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Error",
-                succes: false,
+                success: false,
             })
         }
     }

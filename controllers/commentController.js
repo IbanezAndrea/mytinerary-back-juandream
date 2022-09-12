@@ -9,13 +9,13 @@ const commentController ={
             res.status("201").json({
                 message: "Your comment has been posted!",
                 response: comment._id,
-                succes: true,
+                success: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "There is something wrong with your comment...",
-                succes: false,
+                success: false,
             })
         }
     },   
@@ -27,19 +27,19 @@ const commentController ={
                 res.status("200").json({
                     message: "Comment found ✔",
                     response: comment,
-                    succes: true,
+                    success: true,
                 })
             } else {
                 res.status("404").json({
                     message: "Coud not be found ❌",
-                    succes: false,
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Error",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -60,19 +60,19 @@ const commentController ={
                 res.status("200").json({
                     message: "The following comments were found.",
                     response: comments,
-                    succes: true,
+                    success: true,
             })
             } else {
                 res.status("404").json({
                     message: "No comments could be found...",
-                    succes: false,
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Your comment could not be added.",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -85,19 +85,19 @@ const commentController ={
                 res.status("200").json({
                     message: "You editted your comment.",
                     response: comment,
-                    succes: true,
+                    success: true,
                 })
             } else {
                 res.status("404").json({
                     message: "Could not find the comment...",
-                    succes: false,
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Your comment could not be found.",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -107,13 +107,13 @@ const commentController ={
             await Comment.findOneAndRemove({ _id: id })
             res.status("200").json({
                 message: "You deleted your comment.",
-                succes: true,
+                success: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Error",
-                succes: false,
+                success: false,
             })
         }
     }

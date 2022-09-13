@@ -1,9 +1,18 @@
 const City = require('../models/City')
-
+const joi = require("joi")
+const validator = joi.object({
+    city: joi.string().required(),
+    country: joi.string().required(),
+    photo: joi.string().uri().required(),
+    population: joi.number().integer().min(1000).max(1000000000).required(),
+    foundation: joi.date().max(new Date()).required(),
+    description: joi.string()
+})
 const cityController = {
     addCity: async (req, res) => {
         try {
-            let city = await new City(req.body).save()
+            let result = await validator.validateAsync(req.body)
+            let city = await new City(result).save()
             res.status("201").json({
                 message: "A new city has been added.",
                 response: city._id,

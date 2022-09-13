@@ -7,11 +7,13 @@ const joi = require('joi')
 const validator =joi.object({
     name: 
         joi.string()
+        .pattern(/^[a-zA-Z]+$/)
         .min(3)
         .max(15)
         .required(),
     lastName: 
         joi.string()
+        .pattern(/^[a-zA-Z]+$/)
         .min(3)
         .max(15)
         .required() ,
@@ -21,17 +23,23 @@ const validator =joi.object({
         .required() ,
     country:
         joi.string()
+        .min(4)
+        .max(30)
         .required() ,
     email: 
-        joi.string().email({ 
-        minDomainSegments: 2, 
-        tlds: 
-            { allow: [
-                    'com', 
-                    'net', 
-                ] } 
-            })
-        .required() ,
+        joi.alternatives()
+        .try(
+            joi.string()
+                .lowercase()
+                .email({
+                    minDomainSegments: 2,
+                    tlds: {
+                    allow: ["com", "net", "uy", "ar", ],
+                    },
+                }),
+            )
+        .required()
+        .error(new Error("Invalid email")),
     password: 
         joi.string()
         .pattern(new
@@ -49,18 +57,19 @@ const validator =joi.object({
 })
 const userController ={
     userSignUp: async (req, res) => {
-        let  {
-            name,
-            lastName,
-            photo,
-            country,
-            email,
-            password,
-            role,
-            from
-        } = req.body
+
         try{
             let result = await validator.validateAsync(req.body)
+            let  {
+                name,
+                lastName,
+                photo,
+                country,
+                email,
+                password,
+                role,
+                from
+            } = result
             let user = await User.findOne({email})
                 if (!user){
                     let loggedIn = false;

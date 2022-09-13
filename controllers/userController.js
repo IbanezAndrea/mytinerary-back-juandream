@@ -49,17 +49,18 @@ const validator =joi.object({
 })
 const userController ={
     userSignUp: async (req, res) => {
-            let {
-                name,
-                lastName,
-                photo,
-                country,
-                email,
-                password,
-                role,
-                from
-            }= req.body
+        let  {
+            name,
+            lastName,
+            photo,
+            country,
+            email,
+            password,
+            role,
+            from
+        } = req.body
         try{
+            let result = await validator.validateAsync(req.body)
             let user = await User.findOne({email})
                 if (!user){
                     let loggedIn = false;

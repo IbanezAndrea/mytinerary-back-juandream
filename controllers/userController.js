@@ -2,6 +2,51 @@ const User = require('../models/User');
 const crypto = require('crypto')
 const bcryptjs = require('bcryptjs');
 const sendMail = require('./sendMail')
+const joi = require('joi')
+
+const validator =joi.object({
+    name: 
+        joi.string()
+        .min(3)
+        .max(15)
+        .required(),
+    lastName: 
+        joi.string()
+        .min(3)
+        .max(15)
+        .required() ,
+    photo: 
+        joi.string()
+        .uri()
+        .required() ,
+    country:
+        joi.string()
+        .required() ,
+    email: 
+        joi.string().email({ 
+        minDomainSegments: 2, 
+        tlds: 
+            { allow: [
+                    'com', 
+                    'net', 
+                ] } 
+            })
+        .required() ,
+    password: 
+        joi.string()
+        .pattern(new
+            RegExp('^[a-zA-Z0-9]{3,30}$')),
+    role: 
+        joi.string()
+        .min(3)
+        .max(15)
+        .required(),
+    from: 
+        joi.string()
+        .min(3)
+        .max(15)
+        .required()
+})
 const userController ={
     userSignUp: async (req, res) => {
             let {
@@ -48,7 +93,7 @@ const userController ={
                     } else{  // ===> user.from = ['google','facebook'] includes from other socialmedia
                         user.from.push(from);
                         user.verified = true;
-                        user.password.push(bcryptjs.hashSync(pass,10))
+                        user.password.push(bcryptjs.hashSync(password,10))
                         await user.save()
                         res.status(201).json({
                             message: "User signed up from "+from,

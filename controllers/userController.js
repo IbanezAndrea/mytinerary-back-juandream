@@ -2,9 +2,65 @@ const User = require('../models/User');
 const crypto = require('crypto')
 const bcryptjs = require('bcryptjs');
 const sendMail = require('./sendMail')
+const joi = require('joi')
+
+const validator =joi.object({
+    name: 
+        joi.string()
+        .pattern(/^[a-zA-Z]+$/)
+        .min(3)
+        .max(15)
+        .required(),
+    lastName: 
+        joi.string()
+        .pattern(/^[a-zA-Z]+$/)
+        .min(3)
+        .max(15)
+        .required() ,
+    photo: 
+        joi.string()
+        .uri()
+        .required() ,
+    country:
+        joi.string()
+        .min(4)
+        .max(30)
+        .required() ,
+    email: 
+        joi.alternatives()
+        .try(
+            joi.string()
+                .lowercase()
+                .email({
+                    minDomainSegments: 2,
+                    tlds: {
+                    allow: ["com", "net", "uy", "ar", ],
+                    },
+                }),
+            )
+        .required()
+        .error(new Error("Invalid email")),
+    password: 
+        joi.string()
+        .pattern(new
+            RegExp('^[a-zA-Z0-9]{3,30}$')),
+    role: 
+        joi.string()
+        .min(3)
+        .max(15)
+        .required(),
+    from: 
+        joi.string()
+        .min(3)
+        .max(15)
+        .required()
+})
 const userController ={
     userSignUp: async (req, res) => {
-            let {
+
+        try{
+            let result = await validator.validateAsync(req.body)
+            let  {
                 name,
                 lastName,
                 photo,
@@ -13,8 +69,7 @@ const userController ={
                 password,
                 role,
                 from
-            }= req.body
-        try{
+            } = result
             let user = await User.findOne({email})
                 if (!user){
                     let loggedIn = false;
@@ -48,7 +103,7 @@ const userController ={
                     } else{  // ===> user.from = ['google','facebook'] includes from other socialmedia
                         user.from.push(from);
                         user.verified = true;
-                        user.password.push(bcryptjs.hashSync(pass,10))
+                        user.password.push(bcryptjs.hashSync(password,10))
                         await user.save()
                         res.status(201).json({
                             message: "User signed up from "+from,

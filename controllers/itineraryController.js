@@ -1,9 +1,55 @@
 const Itinerary = require("../models/Itinerary")
+const joi = require('joi')
+const { JSONCookie } = require("cookie-parser")
+
+const validator = joi.object({
+    name: 
+        joi.string()
+        .min(3)
+        .max(50)
+        .alphanum()
+        .required(),
+    user: 
+        joi.string()
+        .hex()
+        .required(),
+    city: 
+        joi.string()
+        .hex()
+        .required(),
+    price: 
+        joi.number()
+        .integer()
+        .min(1)
+        .max(5)
+        .required() ,
+    likes:
+        joi.array()
+        .unique((a, b) => a.property === b.property)
+        .required(),
+    tags: 
+        joi.array()
+        .items(joi.string())
+        .required() ,
+    duration: 
+        joi.number()
+        .min(1)
+        .max(200)
+        .integer()
+        .required() ,
+    description: 
+        joi.string()
+        .alphanum()
+        .min(15)
+        .max(500),
+
+})
 
 const itineraryController = {
     addItinerary: async (req, res) => {
         try {
-            let itinerary = await new Itinerary(req.body).save()
+            let result = await validator.validateAsync(req.body)
+            let itinerary = await new Itinerary(result).save()
             res.status("201").json({
                 message: "A new itinerary has been added.",
                 response: itinerary._id,
@@ -47,8 +93,8 @@ const itineraryController = {
         if(req.query.city){
             query.city = req.query.city
         }
-        if (req.query.user) {
-            query.user = req.query.user
+        if (req.query.auth) {
+            query.user = req.query.auth
         }
         try {
             itineraries = await Itinerary.find(query)

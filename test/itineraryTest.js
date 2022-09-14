@@ -1,6 +1,6 @@
 // const request = require("supertest")
 // const app = require("../app.js")
-
+// const {assert} = require("chai")
 
 
 // describe("POST/itineraries", ()=>{

@@ -218,6 +218,32 @@ const userController ={
             })
         }
     },
+    userSignOut: async(req,res) => {
+        const {email} = req.body
+        try{
+            let user = await User.findOne({email:email})
+                    if (user){
+                        user.loggedIn = false
+                        await user.save()
+                                res.status(200).json({
+                                    message: 'You have successfully signed out!',
+                                    success: true,
+                                    response: user.loggedIn
+                            })
+                    } else {
+                        res.status(404).json({
+                            message: 'No user found...',
+                            success: false
+                        })
+                    }
+            } catch (error) {
+                console.log(error);
+                    res.status(400).json({
+                        message: 'Failed to sign out...',
+                        success:false
+                    })
+                }
+        },
     getUser: async (req, res) => {
         const { id } = req.params
         try {

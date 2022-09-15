@@ -11,7 +11,7 @@ const validator =joi.object({
         .min(3)
         .max(15)
         .required(),
-    lastName: 
+    lastname: 
         joi.string()
         .pattern(/^[a-zA-Z]+$/)
         .min(3)
@@ -62,7 +62,7 @@ const userController ={
             let result = await validator.validateAsync(req.body)
             let  {
                 name,
-                lastName,
+                lastname,
                 photo,
                 country,
                 email,
@@ -79,7 +79,7 @@ const userController ={
                         .toString('hex')
                     if(from === 'form'){ //from form
                         password = bcryptjs.hashSync(password,10);
-                        user = await new User({ name, lastName, photo, country, email, password: [password], role, from: [from], loggedIn, verified, code }).save()
+                        user = await new User({ name, lastname, photo, country, email, password: [password], role, from: [from], loggedIn, verified, code }).save()
                         sendMail(email,code)
                         res.status(201).json({
                             message: "User signed ✔",
@@ -88,7 +88,7 @@ const userController ={
                     } else{ // from socialmedia
                         password = bcryptjs.hashSync(password,10);
                         verified = true,
-                        user = await new User({ name, lastName, photo, country, email, password: [password], role, from: [from], loggedIn, verified, code }).save()
+                        user = await new User({ name, lastname, photo, country, email, password: [password], role, from: [from], loggedIn, verified, code }).save()
                         res.status(201).json({
                             message: "User signed from "+from,
                             success: true,
@@ -173,7 +173,7 @@ const userController ={
                                 message: "Welcome " + user.name
                             })
                         }else{ // if password does not match
-                            res.status(400).json({
+                            res.status(401).json({
                                 success:false,
                                 message: "Wrong username or password ❌"
                             })

@@ -3,7 +3,7 @@ const mongoose= require ('mongoose')
     const userSchema = new mongoose.Schema(
         {
         name:{type: String, required:true},
-        lastName:{type: String, required:true},
+        lastname:{type: String, required:true},
         email:{ 
                 type : String,
                 min: [4, 'Too short, min is 4 characters'], 

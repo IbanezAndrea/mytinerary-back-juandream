@@ -7,7 +7,6 @@ const validator = joi.object({
         joi.string()
         .min(3)
         .max(50)
-        .alphanum()
         .required(),
     user: 
         joi.string()
@@ -28,8 +27,7 @@ const validator = joi.object({
         .unique((a, b) => a.property === b.property)
         .required(),
     tags: 
-        joi.array()
-        .items(joi.string())
+        joi.string()
         .required() ,
     duration: 
         joi.number()
@@ -39,7 +37,6 @@ const validator = joi.object({
         .required() ,
     description: 
         joi.string()
-        .alphanum()
         .min(15)
         .max(500),
 

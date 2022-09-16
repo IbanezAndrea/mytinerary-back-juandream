@@ -1,12 +1,12 @@
 const verifyMail = (mail,code,url) => {
     return`<div style="margin: 0 auto;padding: 1rem 0;-webkit-text-size-adjust: 100%;background-color: #eabf9f;color: #1e212d;max-width: 600px;min-width:320px">
         <img
-            src="https://cdn.templates.unlayer.com/assets/1623940935068-plane.png"
+            src="https://i.ibb.co/WfpYBpB/logomytinerary.png"
             alt="Logo" title="Logo"
             style="height: auto;max-width: 120px; Margin: 0 auto;display: block;" />
         <div style="background-color: #e5b299;width: 100%;display: block">
             <img
-                src="https://assets.unlayer.com/projects/100471/1662798341024-150017.jpg"
+                src="https://wallpaperaccess.com/full/222675.jpg"
                 alt="Hero Image" title="Hero Image"
                 style="width: 100%;max-width: 600px;Margin: 0 auto;display: block;" />
         </div>
@@ -16,15 +16,18 @@ const verifyMail = (mail,code,url) => {
                     color: #7d5a50; line-height: 140%;
                     text-align: center; word-wrap: break-word;">
                     <p style="font-size: 14px; line-height: 140%;font-family: Cabin, sans-serif; font-size: 26px;font-weight: 600;">
-                        Call of Cthulhu
+                    ✈  Welcome to My Tineraries! ✈
                     </p>
                 </div>
                 <div style="padding:10px 40px;
                 font-family:arial,helvetica,sans-serif;
                 line-height: 160%; text-align: center;">
                     <p style="font-size: .8rem; line-height: 160%;">
-                        Hello ${mail}, click here to verify you account
-                        esta es una prueba, esto es lo que pude hacer por ahora, avisame si en tu pantalla se rompe y si de momento esta bien asi 🐙 
+                        Hello ${mail}, please click the button downside to verify your acount!
+                    
+                    </p>
+                    <p style="font-size: .6rem; line-height: 160%;">
+                        If you did not register in our page, just ignore this mail.
                     </p>
                 </div>
                 <div style="padding:10px;">

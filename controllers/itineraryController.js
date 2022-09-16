@@ -5,6 +5,7 @@ const { JSONCookie } = require("cookie-parser")
 const validator = joi.object({
     name: 
         joi.string()
+        .trim()
         .min(3)
         .max(50)
         .required(),
@@ -27,7 +28,8 @@ const validator = joi.object({
         .unique((a, b) => a.property === b.property)
         .required(),
     tags: 
-        joi.string()
+        joi.array()
+        .items(joi.string())
         .required() ,
     duration: 
         joi.number()

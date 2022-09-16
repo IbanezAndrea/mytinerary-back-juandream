@@ -7,13 +7,13 @@ const joi = require('joi')
 const validator =joi.object({
     name: 
         joi.string()
-        .pattern(/^[a-zA-Z]+$/)
+        .pattern(/^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/)
         .min(3)
         .max(15)
         .required(),
     lastname: 
         joi.string()
-        .pattern(/^[a-zA-Z]+$/)
+        .pattern(/^[ñA-Za-z _]*[ñA-Za-z][ñA-Za-z _]*$/)
         .min(3)
         .max(15)
         .required() ,

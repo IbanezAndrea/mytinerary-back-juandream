@@ -126,7 +126,7 @@ const userController ={
             if (user) {
                 user.verified = true
                 await user.save()
-                res.status("200").redirect(301, 'http://localhost:3000/signin')
+                res.status("200").redirect(301, 'http://my-tinerary-juandream.herokuapp.com/signin')
 
             } else {
                 res.status("404").json({

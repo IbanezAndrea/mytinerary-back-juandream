@@ -3,6 +3,9 @@ const crypto = require('crypto')
 const bcryptjs = require('bcryptjs');
 const sendMail = require('./sendMail')
 const joi = require('joi')
+const jwt = require('jsonwebtoken')
+
+
 
 const validator =joi.object({
     name: 
@@ -126,7 +129,7 @@ const userController ={
             if (user) {
                 user.verified = true
                 await user.save()
-                res.status("200").redirect(301, 'http://localhost:3000/signin')
+                res.status("200").redirect(301, 'http://my-tinerary-juandream.herokuapp.com/signin')
 
             } else {
                 res.status("404").json({
@@ -166,10 +169,12 @@ const userController ={
 
                             user.loggedIn = true
                             await user.save()
-                            
+                            const token = jwt.sign({id: user._id}, process.env.KEY_JWT, {expiresIn: 60*60*24})
                             res.status(200).json({
                                 success:true,
-                                response: {user: loginUser},
+                                response: {
+                                    user: loginUser,
+                                    token:token},
                                 message: "Welcome " + user.name
                             })
                         }else{ // if password does not match
@@ -337,7 +342,26 @@ const userController ={
                 success: false,
             })
         }
+    },
+    verifyToken: (req, res) => {
+        if (!req.err){
+            const token = jwt.sign({id: req.user.id}, process.env.KEY_JWT, {expiresIn:60*60*24})
+            res.status(200).json({
+                success:true,
+                response:{
+                    user: req.user,
+                    token: token
+                },
+                message: 'Welcome' + req.user.name+'!'
+            })
+        }else {
+            res.json({
+                success:false,
+                message: "Sign in please!"
+            })
+        }
+        }
     }
-}
+
 
 module.exports =userController;

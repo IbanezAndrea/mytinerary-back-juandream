@@ -1,19 +1,28 @@
 const City = require('../models/City')
-
+const joi = require("joi")
+const validator = joi.object({
+    city: joi.string().required(),
+    country: joi.string().required(),
+    photo: joi.string().uri().required(),
+    population: joi.number().integer().min(1000).max(1000000000).required(),
+    foundation: joi.date().max(new Date()).required(),
+    description: joi.string()
+})
 const cityController = {
     addCity: async (req, res) => {
         try {
-            let city = await new City(req.body).save()
+            let result = await validator.validateAsync(req.body)
+            let city = await new City(result).save()
             res.status("201").json({
                 message: "A new city has been added.",
                 response: city._id,
-                succes: true,
+                success: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Your city could not be added.",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -25,19 +34,19 @@ const cityController = {
                 res.status("200").json({
                     message: "Found a city.",
                     response: city,
-                    succes: true,
+                    success: true,
                 })
             } else {
                 res.status("404").json({
                     message: "The city could not be found.",
-                    succes: false,
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Error",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -55,12 +64,12 @@ getCities: async (req, res)=>{
             res.status("200").json({
                 message: "The following cities were found.",
                 response: cities,
-                succes: true,
+                success: true,
             })
         } else {
             res.status("404").json({
                 message: "No cities could be found...",
-                succes: false,
+                success: false,
             })
         }
     } catch (error) {
@@ -77,19 +86,19 @@ getCities: async (req, res)=>{
                 res.status("200").json({
                     message: "You have updated acity.",
                     response: putCity,
-                    succes: true,
+                    success: true,
                 })
             } else {
                 res.status("404").json({
                     message: "Could not find the city.",
-                    succes: false,
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Error",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -99,13 +108,13 @@ getCities: async (req, res)=>{
             await City.findOneAndDelete({ _id: id })
             res.status("200").json({
                 message: "You deleted a city.",
-                succes: true,
+                success: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Error",
-                succes: false,
+                success: false,
             })
         }
     }

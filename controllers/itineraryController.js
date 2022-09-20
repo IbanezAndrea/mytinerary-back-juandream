@@ -1,19 +1,64 @@
 const Itinerary = require("../models/Itinerary")
+const joi = require('joi')
+const { JSONCookie } = require("cookie-parser")
+
+const validator = joi.object({
+    name: 
+        joi.string()
+        .trim()
+        .min(3)
+        .max(50)
+        .required(),
+    user: 
+        joi.string()
+        .hex()
+        .required(),
+    city: 
+        joi.string()
+        .hex()
+        .required(),
+    price: 
+        joi.number()
+        .integer()
+        .min(1)
+        .max(5)
+        .required() ,
+    likes:
+        joi.array()
+        .unique((a, b) => a.property === b.property)
+        .required(),
+    tags: 
+        joi.array()
+        .items(joi.string())
+        .required() ,
+    duration: 
+        joi.number()
+        .min(1)
+        .max(200)
+        .integer()
+        .required() ,
+    description: 
+        joi.string()
+        .min(15)
+        .max(500),
+
+})
 
 const itineraryController = {
     addItinerary: async (req, res) => {
         try {
-            let itinerary = await new Itinerary(req.body).save()
+            let result = await validator.validateAsync(req.body)
+            let itinerary = await new Itinerary(result).save()
             res.status("201").json({
                 message: "A new itinerary has been added.",
                 response: itinerary._id,
-                succes: true,
+                success: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Your itinerary could not be added.",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -25,19 +70,19 @@ const itineraryController = {
                 res.status("200").json({
                     message: "Found itinerary✔",
                     response: itinerary,
-                    succes: true,
+                    success: true,
                 })
             } else {
                 res.status("404").json({
-                    message: "Coud not be found ❌",
-                    succes: false,
+                    message: "Could not be found ❌",
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Error",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -47,8 +92,8 @@ const itineraryController = {
         if(req.query.city){
             query.city = req.query.city
         }
-        if (req.query.user) {
-            query.user = req.query.user
+        if (req.query.auth) {
+            query.user = req.query.auth
         }
         try {
             itineraries = await Itinerary.find(query)
@@ -58,19 +103,19 @@ const itineraryController = {
                 res.status("200").json({
                     message: "The following itineraries were found.",
                     response: itineraries,
-                    succes: true,
+                    success: true,
             })
             } else {
                 res.status("404").json({
                     message: "No itineraries could be found...",
-                    succes: false,
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Your itinerary could not be added.",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -83,19 +128,19 @@ const itineraryController = {
                 res.status("200").json({
                     message: "You have updated an itinerary.",
                     response: itinerary,
-                    succes: true,
+                    success: true,
                 })
             } else {
                 res.status("404").json({
                     message: "Could not find the itinerary.",
-                    succes: false,
+                    success: false,
                 })
             }
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Your itinerary could not be found.",
-                succes: false,
+                success: false,
             })
         }
     },
@@ -105,13 +150,13 @@ const itineraryController = {
             await Itinerary.findOneAndRemove({ _id: id })
             res.status("200").json({
                 message: "You deleted a itinerary.",
-                succes: true,
+                success: true,
             })
         } catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Error",
-                succes: false,
+                success: false,
             })
         }
     }

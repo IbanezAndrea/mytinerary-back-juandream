@@ -4,8 +4,18 @@ const Comment = require("../models/Comment");
 const commentController ={
 
     addComment: async (req, res) => {
+        let {
+            comment:textComment,
+            itinerary
+        } = req.body
+        let user = req.user.userId
         try {
-            let comment = await new Comment(req.body).save()
+            let comment = await new Comment({
+                comment: textComment,
+                itinerary,
+                user,
+                date: new Date()
+            }).save()
             res.status("201").json({
                 message: "Your comment has been posted!",
                 response: comment._id,
@@ -78,15 +88,26 @@ const commentController ={
     },
     modifyComment: async (req, res) => {
         const { id } = req.params
+        let { comment: commentText } = req.body
+        const {userId, role} = req.user
         let comment
         try {
-            comment = await Comment.findOneAndUpdate({ _id: id }, req.body, { new: true })
+            comment = await Comment.findOne({ _id: id })
             if (comment) {
-                res.status("200").json({
-                    message: "You editted your comment.",
-                    response: comment,
-                    success: true,
-                })
+                if (comment.user === userId || role === "admin") {
+                    comment.comment = commentText
+                    await comment.save()
+                    res.status("200").json({
+                        message: "You editted your comment.",
+                        response: comment,
+                        success: true,
+                    })
+                } else {
+                    res.status("401").json({
+                        message: "Unahutorized",
+                        success: false,
+                    })
+                }
             } else {
                 res.status("404").json({
                     message: "Could not find the comment...",
@@ -103,12 +124,22 @@ const commentController ={
     },
     removeComment: async (req, res) => {
         const { id } = req.params
+        const { userId, role } = req.user
+        let comment
         try {
-            await Comment.findOneAndRemove({ _id: id })
-            res.status("200").json({
-                message: "You deleted your comment.",
-                success: true,
-            })
+            comment = await Comment.findOne({_id:id})
+            if (comment.user === userId || role === "admin") {
+                await Comment.findOneAndRemove({ _id: id })
+                res.status("200").json({
+                    message: "You deleted this comment.",
+                    success: true,
+                })
+            } else {
+                res.status("401").json({
+                    message: "Unahutorized",
+                    success: true,
+                })
+            }
         } catch (error) {
             console.log(error)
             res.status("400").json({

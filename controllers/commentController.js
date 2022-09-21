@@ -96,6 +96,7 @@ const commentController ={
             if (comment) {
                 if (comment.user.toString() === userId.toString() || role === "admin") {
                     comment.comment = commentText
+                    comment.date = new Date()
                     await comment.save()
                     res.status("200").json({
                         message: "You editted your comment.",

@@ -17,7 +17,7 @@ passport.use(
                         user = {
                             userId: user._id,
                             name: user.name,
-                            emaill:user.email,
+                            email:user.email,
                             role:user.role,
                             photo: user.photo
                         }

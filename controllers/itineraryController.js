@@ -1,6 +1,5 @@
 const Itinerary = require("../models/Itinerary")
 const joi = require('joi')
-const { JSONCookie } = require("cookie-parser")
 
 const validator = joi.object({
     name: 

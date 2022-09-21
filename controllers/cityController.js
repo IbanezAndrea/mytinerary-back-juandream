@@ -11,13 +11,29 @@ const validator = joi.object({
 const cityController = {
     addCity: async (req, res) => {
         try {
+            let {
+                city,
+                country,
+                photo,
+                population,
+                foundation,
+                description
+            } = req.body
             let result = await validator.validateAsync(req.body)
-            let city = await new City(result).save()
-            res.status("201").json({
-                message: "A new city has been added.",
-                response: city._id,
-                success: true,
-            })
+
+            if (req.user.role  === "admin" ){
+                city = await new City(result).save()
+                res.status("201").json({
+                    message: "A new city has been added.",
+                    response: city._id,
+                    success: true,
+                })
+            }else{
+                res.status("401").json({
+                    message: "Unauthorized",
+                    success: true,
+                })
+            }
         } catch (error) {
             console.log(error)
             res.status("400").json({
@@ -79,15 +95,36 @@ getCities: async (req, res)=>{
 
     modifyCity: async (req, res)=>{
         const { id } = req.params
+        const {role} = req.user
         let putCity = {}
-        try {
-            putCity = await City.findOneAndUpdate({_id:id},req.body,{new:true})
+        let currentCity
+        try { 
+            //console.log(id)
             if (putCity) {
-                res.status("200").json({
-                    message: "You have updated acity.",
-                    response: putCity,
-                    success: true,
-                })
+                //console.log(req.body)
+            let currentCity =  await City.findOne({_id:id})
+                let {
+                    city,
+                    country,
+                    photo,
+                    population,
+                    foundation,
+                    description
+                    } = currentCity
+                let result = await validator.validateAsync({city,country,photo,population,foundation,description, ...req.body})
+                    if (role === "admin") {
+                        putCity = await City.findOneAndUpdate({_id:id},result,{new:true})
+                        res.status("200").json({
+                            message: "You have updated acity.",
+                            response: putCity,
+                            success: true,
+                        })
+                    } else {
+                        res.status("401").json({
+                            message: "Unauthorized",
+                            success: true,
+                        })
+                    }
             } else {
                 res.status("404").json({
                     message: "Could not find the city.",
@@ -105,11 +142,11 @@ getCities: async (req, res)=>{
     removeCity: async (req, res) => {
         const { id } = req.params
         try {
-            await City.findOneAndDelete({ _id: id })
-            res.status("200").json({
-                message: "You deleted a city.",
-                success: true,
-            })
+                await City.findOneAndDelete({ _id: id })
+                res.status("200").json({
+                    message: "You deleted a city.",
+                    success: true,
+                })
         } catch (error) {
             console.log(error)
             res.status("400").json({

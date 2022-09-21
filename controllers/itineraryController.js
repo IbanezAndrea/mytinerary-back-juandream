@@ -131,41 +131,34 @@ const itineraryController = {
     },
     modifyItinerary: async (req, res) => {
         const { id } = req.params
-        let user = req.user.userId
+        const {userId, role} = req.user
         let itinerary
         try {
-            let itinerary = await Itinerary.findOne({_id:id})
-            //console.log(itinerary)
+            itinerary = await Itinerary.findOne({_id:id})
+
             if (itinerary){  
-                // console.log(user)
-                //console.log(itinerary.user)
-                console.log(itinerary.user._id)
-                console.log(req.body)
-                if ( user === itinerary.user._id){
-                // let {
-                //     name,
-                //     city,
-                //     price,
-                //     likes,
-                //     tags,
-                //     duration,
-                //     description
-                // } = itinerary
-                console.log(req.body)
-                    let result = {...itinerary, ...req.body}
-                    console.log(result)
-                    await validator.validateAsync(result)
-                    //console.log(result)
-                    itinerary = await Itinerary.findOneAndUpdate(
-                        {_id:id},
-                        result,
-                        {new:true})
-                    console.log(itinerary)
-                    res.status("200").json({
-                        message: "You have updated an itinerary.",
-                        response: itinerary,
-                        success: true,
-                    })
+                
+                    if ( itinerary.user.toString() === userId.toString() || role === "admin" ){
+                        let {
+                            name,
+                            city,
+                            price,
+                            likes,
+                            tags,
+                            duration,
+                            description
+                        } = itinerary
+                        let result = {name,city:city.toString(),price,likes,tags,duration,description,user:userId.toString(), ...req.body}
+                        await validator.validateAsync(result)
+                        itinerary = await Itinerary.findOneAndUpdate(
+                            {_id:id},
+                            result,
+                            {new:true})
+                        res.status("200").json({
+                            message: "You have updated an itinerary.",
+                            response: itinerary,
+                            success: true,
+                        })
                 } else{
                         res.status("401").json({
                             message: "Unauthorized",
@@ -188,10 +181,10 @@ const itineraryController = {
     },
     removeItinerary: async (req, res) => {
         const { id } = req.params
-        let {userID, role}= req.user
+        let {userId, role}= req.user
         try {
         let itinerary = await Itinerary.findOneAndRemove({ _id: id })
-        if (itinerary.user === userID || role=== "admin"){  
+        if (itinerary.user === userId || role=== "admin"){  
             res.status("200").json({
             message: "You deleted a itinerary.",
             success: true,

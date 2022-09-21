@@ -112,7 +112,7 @@ getCities: async (req, res)=>{
                     description
                     } = currentCity
                 let result = await validator.validateAsync({city,country,photo,population,foundation,description, ...req.body})
-                    if (role === "user") {
+                    if (role === "admin") {
                         putCity = await City.findOneAndUpdate({_id:id},result,{new:true})
                         res.status("200").json({
                             message: "You have updated acity.",

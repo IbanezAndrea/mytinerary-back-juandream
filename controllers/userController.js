@@ -163,7 +163,6 @@ const userController ={
                                 name: user.name,
                                 email: user.email,
                                 role: user.role,
-                                from: user.from,
                                 photo:user.photo
                             }
 
@@ -346,13 +345,17 @@ const userController ={
         }
     },
     verifyToken: (req, res) => {
-        if (!req.err){
-            const token = jwt.sign({id: req.user.id}, process.env.KEY_JWT, {expiresIn:60*60*24})
+        if (req.user !== null){
             res.status(200).json({
                 success:true,
                 response:{
-                    user: req.user,
-                    token: token
+                    user: {
+                        id: req.user.userId,
+                        name: req.user.name,
+                        email: req.user.email,
+                        role: req.user.role,
+                        photo:req.user.photo
+                    }
                 },
                 message: 'Welcome' + req.user.name+'!'
             })

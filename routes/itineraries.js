@@ -9,9 +9,9 @@ const { addItinerary,
         likeDislike 
     } = require("../controllers/itineraryController")
 
-router.post('/', addItinerary)
-router.patch('/:id', modifyItinerary)
-router.delete('/:id', removeItinerary )
+router.post('/',passport.authenticate('jwt',{ session: false}), addItinerary)
+router.patch('/:id',passport.authenticate('jwt',{ session: false}), modifyItinerary)
+router.delete('/:id',passport.authenticate('jwt',{ session: false}), removeItinerary )
 router.get('/', getItineraries)
 router.patch('/like/:id', passport.authenticate('jwt',{ session: false}), likeDislike)
 

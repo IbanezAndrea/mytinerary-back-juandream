@@ -46,8 +46,18 @@ const validator = joi.object({
 
 const itineraryController = {
     addItinerary: async (req, res) => {
+        let user = req.user.userId.toString()
+        let {
+            name,
+            city,
+            price,
+            likes,
+            tags,
+            duration,
+            description
+        } = req.body
         try {
-            let result = await validator.validateAsync(req.body)
+            let result = await validator.validateAsync({name,city,price,likes,tags,duration,user,description})
             let itinerary = await new Itinerary(result).save()
             res.status("201").json({
                 message: "A new itinerary has been added.",
@@ -121,21 +131,46 @@ const itineraryController = {
     },
     modifyItinerary: async (req, res) => {
         const { id } = req.params
+        const {userId, role} = req.user
         let itinerary
         try {
-            itinerary = await Itinerary.findOneAndUpdate({ _id: id }, req.body, { new: true })
-            if (itinerary) {
-                res.status("200").json({
-                    message: "You have updated an itinerary.",
-                    response: itinerary,
-                    success: true,
-                })
+            itinerary = await Itinerary.findOne({_id:id})
+
+            if (itinerary){  
+                
+                    if ( itinerary.user.toString() === userId.toString() || role === "admin" ){
+                        let {
+                            name,
+                            city,
+                            price,
+                            likes,
+                            tags,
+                            duration,
+                            description
+                        } = itinerary
+                        let result = {name,city:city.toString(),price,likes,tags,duration,description,user:userId.toString(), ...req.body}
+                        await validator.validateAsync(result)
+                        itinerary = await Itinerary.findOneAndUpdate(
+                            {_id:id},
+                            result,
+                            {new:true})
+                        res.status("200").json({
+                            message: "You have updated an itinerary.",
+                            response: itinerary,
+                            success: true,
+                        })
+                } else{
+                        res.status("401").json({
+                            message: "Unauthorized",
+                            success: false,
+                        })
+                    }
             } else {
-                res.status("404").json({
-                    message: "Could not find the itinerary.",
-                    success: false,
-                })
-            }
+                    res.status("404").json({
+                        message: "Could not find the itinerary.",
+                        success: false,
+                    })
+                }
         } catch (error) {
             console.log(error)
             res.status("400").json({
@@ -146,12 +181,20 @@ const itineraryController = {
     },
     removeItinerary: async (req, res) => {
         const { id } = req.params
+        let {userId, role}= req.user
         try {
-            await Itinerary.findOneAndRemove({ _id: id })
+        let itinerary = await Itinerary.findOneAndRemove({ _id: id })
+        if (itinerary.user === userId || role=== "admin"){  
             res.status("200").json({
-                message: "You deleted a itinerary.",
-                success: true,
-            })
+            message: "You deleted a itinerary.",
+            success: true,
+        })
+    }else{
+        res.status("401").json({
+            message: "Unauthorized",
+            success: true,
+        })
+    }   
         } catch (error) {
             console.log(error)
             res.status("400").json({
@@ -165,9 +208,6 @@ const itineraryController = {
         let {id} = req.params
         try{
             let itinerary = await Itinerary.findOne({_id: id})
-           // console.log(itinerary)
-            //console.log(id)
-            //console.log(itinerary.likes)
             if (itinerary && itinerary.likes.includes(userId)){
                 
                     await Itinerary.findOneAndUpdate({_id:id}, {$pull:{likes:userId}}, {new:true})

@@ -94,7 +94,7 @@ const commentController ={
         try {
             comment = await Comment.findOne({ _id: id })
             if (comment) {
-                if (comment.user === userId || role === "admin") {
+                if (comment.user.toString() === userId.toString() || role === "admin") {
                     comment.comment = commentText
                     await comment.save()
                     res.status("200").json({
@@ -128,7 +128,7 @@ const commentController ={
         let comment
         try {
             comment = await Comment.findOne({_id:id})
-            if (comment.user === userId || role === "admin") {
+            if (comment.user.toString() === userId.toString() || role === "admin") {
                 await Comment.findOneAndRemove({ _id: id })
                 res.status("200").json({
                     message: "You deleted this comment.",

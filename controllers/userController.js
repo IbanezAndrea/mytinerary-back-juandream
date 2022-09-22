@@ -303,54 +303,50 @@ const userController ={
         }
     },
     modifyUser: async (req, res)=>{
-        const { id } = req.params
-        const {userId, role:userRole} = req.user
+        // const { id } = req.params
+        const {email} = req.body
+        const {email: uEmail, role:userRole} = req.user
         try {
-            if (userId.toString() === id || userRole === "admin") {
-                let putUser = await User.find({ _id: id })
+            console.log(email)
+            if (uEmail.toString() === email || userRole === "admin") {
+                let putUser = await User.findOne({ email: email })
                 if (putUser) {
-                    let {
-                        name,
-                        lastname,
-                        photo,
-                        country,
-                        email,
-                        password,
-                        from,
-                        role
-                    } = putUser;
-                    if (userRole !== "admin") req.body.role = null;
-                    let result = await validator.validateAsync({
-                        name,
-                        lastname,
-                        photo,
-                        country,
-                        email,
-                        password,
-                        from,
-                        role,
-                        ...req.body
-                    });
-                    putUser = await User.findOneAndUpdate(
-                        { _id: id }, result, { new: true })
-                    res.status("200").json({
-                        message: "User updated.",
-                        response: putUser,
-                        success: true,
-                    });
-                } else {
-                    res.status("404").json({
-                        message: "this User does not exist.",
-                        success: false,
-                    })
-                }
+                        let {
+                            name,
+                            lastname,
+                            photo,
+                            country,
+                            role
+                        } = req.body;
+                    if (userRole !== "admin") {
+                            putUser = await User.findOneAndUpdate(
+                            { email:email }, {name,lastname,photo,country}, { new: true })
+                                res.status("200").json({
+                                    message: "User updated.",
+                                    response: putUser,
+                                    success: true,
+                            })
+                    } else if(userRole === "admin") {
+                            putUser = await User.findOneAndUpdate(
+                            { email:email }, {name,lastname,photo,country,role}, { new: true })
+                            res.status("200").json({
+                                message: "User updated.",
+                                response: putUser,
+                                success: true,
+                            })
+                    } else{
+                        res.status("404").json({
+                            message: "this User does not exist.",
+                            success: false,
+                        })
+                    }
             } else {
                 res.status("401").json({
                     message: "Unahutorized",
                     success: false,
                 })
             }
-        } catch (error) {
+        }}catch (error) {
             console.log(error)
             res.status("400").json({
                 message: "Error",

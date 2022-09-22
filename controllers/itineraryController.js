@@ -183,7 +183,7 @@ const itineraryController = {
         let {userId, role}= req.user
         try {
         let itinerary = await Itinerary.findOneAndRemove({ _id: id })
-        if (itinerary.user === userId || role=== "admin"){  
+        if (itinerary.user.toString() === userId.toString() || role=== "admin"){  
             res.status("200").json({
             message: "You deleted a itinerary.",
             success: true,

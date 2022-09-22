@@ -1,5 +1,6 @@
 const express = require('express');
 let passport = require('../config/passport');
+const adminPassport = require('../config/adminPassport')
 const router = express.Router();
 const { getUser,
         userSignUp,
@@ -20,8 +21,8 @@ router.post('/signout', userSignOut);
 router.get('/', getUsers );
 router.get('/acc/:code', verifyMail );
 router.get('/:id', getUser );
-router.put('/:id', modifyUser );
-router.delete('/:id', removeUser );
+router.put('/:id', passport.authenticate('jwt', {session:false}),modifyUser );
+router.delete('/:id',adminPassport.authenticate('jwt', {session:false}), removeUser );
 
 //router.post('/registration', function(req, res));
 

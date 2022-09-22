@@ -70,7 +70,6 @@ const userController ={
                 country,
                 email,
                 password,
-                role,
                 from
             } = result
             let user = await User.findOne({email})
@@ -82,7 +81,7 @@ const userController ={
                         .toString('hex')
                     if(from === 'form'){ //from form
                         password = bcryptjs.hashSync(password,10);
-                        user = await new User({ name, lastname, photo, country, email, password: [password], role, from: [from], loggedIn, verified, code }).save()
+                        user = await new User({ name, lastname, photo, country, email, password: [password], role:"user", from: [from], loggedIn, verified, code }).save()
                         sendMail(email,code)
                         res.status(201).json({
                             message: "User signed ✔",
@@ -91,7 +90,7 @@ const userController ={
                     } else{ // from socialmedia
                         password = bcryptjs.hashSync(password,10);
                         verified = true,
-                        user = await new User({ name, lastname, photo, country, email, password: [password], role, from: [from], loggedIn, verified, code }).save()
+                        user = await new User({ name, lastname, photo, country, email, password: [password], role:"user", from: [from], loggedIn, verified, code }).save()
                         res.status(201).json({
                             message: "User signed from "+from,
                             success: true,
@@ -305,18 +304,49 @@ const userController ={
     },
     modifyUser: async (req, res)=>{
         const { id } = req.params
-        let putUser = {}
+        const {userId, role:userRole} = req.user
         try {
-            putUser= await User.findOneAndUpdate({_id:id},req.body,{new:true})
-            if (putUser) {
-                res.status("200").json({
-                    message: "User updated.",
-                    response: putUser,
-                    success: true,
-                })
+            if (userId.toString() === id || userRole === "admin") {
+                let putUser = await User.find({ _id: id })
+                if (putUser) {
+                    let {
+                        name,
+                        lastname,
+                        photo,
+                        country,
+                        email,
+                        password,
+                        from,
+                        role
+                    } = putUser;
+                    if (userRole !== "admin") req.body.role = null;
+                    let result = await validator.validateAsync({
+                        name,
+                        lastname,
+                        photo,
+                        country,
+                        email,
+                        password,
+                        from,
+                        role,
+                        ...req.body
+                    });
+                    putUser = await User.findOneAndUpdate(
+                        { _id: id }, result, { new: true })
+                    res.status("200").json({
+                        message: "User updated.",
+                        response: putUser,
+                        success: true,
+                    });
+                } else {
+                    res.status("404").json({
+                        message: "this User does not exist.",
+                        success: false,
+                    })
+                }
             } else {
-                res.status("404").json({
-                    message: "this User does not exist.",
+                res.status("401").json({
+                    message: "Unahutorized",
                     success: false,
                 })
             }
@@ -330,16 +360,23 @@ const userController ={
     },
     removeUser: async (req, res) => {
         const { id } = req.params
-        try {
-            await User.findOneAndDelete({ _id: id })
-            res.status("200").json({
-                message: "You deleted an User.",
-                success: true,
-            })
-        } catch (error) {
-            console.log(error)
-            res.status("400").json({
-                message: "Error",
+        if (req.user !== null) {
+            try {
+                await User.findOneAndDelete({ _id: id })
+                res.status("200").json({
+                    message: "You deleted an User.",
+                    success: true,
+                })
+            } catch (error) {
+                console.log(error)
+                res.status("400").json({
+                    message: "Error",
+                    success: false,
+                })
+            }
+        } else {
+            res.status("401").json({
+                message: "Unahutorized",
                 success: false,
             })
         }

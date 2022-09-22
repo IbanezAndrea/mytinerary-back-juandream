@@ -208,15 +208,16 @@ const itineraryController = {
         try{
             let itinerary = await Itinerary.findOne({_id: id})
             if (itinerary && itinerary.likes.includes(userId)){
-                
-                    await Itinerary.findOneAndUpdate({_id:id}, {$pull:{likes:userId}}, {new:true})
+                let itineraryLikes = await Itinerary.findOneAndUpdate({_id:id}, {$pull:{likes:userId}}, {new:true})
                     res.status(200).json({
+                        response: itineraryLikes.likes,
                         success: true,
                         message: "You disliked this Itinerary"
                     })
                 } else {
-                    await Itinerary.findOneAndUpdate({_id:id}, {$push:{likes:userId}}, {new:true})
+                    let itineraryLikes = await Itinerary.findOneAndUpdate({_id:id}, {$push:{likes:userId}}, {new:true})
                     res.status(200).json({
+                        response: itineraryLikes.likes,
                         success: true,
                         message: "You liked this Itinerary"
                     })
@@ -228,7 +229,33 @@ const itineraryController = {
                 message: "error"
             })
         }
+    },
+    getItineraryByUser: async (req,res) => {
+    let itineraries
+        try{
+            itineraries = await Itinerary.find({user: req.user.userId.toString()})
+            .populate("user",{name:1, photo:1,country:1})
+            console.log(itineraries)
+            console.log(req.user.userId.toString())
+            if (itineraries) {
+                res.status("200").json({
+                    message: "These are your itineraries",
+                    response: itineraries,
+                    success: true,
+            })} else {
+                res.status("404").json({
+                    message: "Could not found any itineraries made by you",
+                    success: false
+                })
+            }
+    } catch (error){
+        console.log(error)
+        res.status("400").json({
+            message: "error",
+            success:false
+        })
     }
+}
 }
 
 module.exports = itineraryController

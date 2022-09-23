@@ -74,9 +74,28 @@ getCities: async (req, res)=>{
         let regExp= new RegExp(`^${req.query.city}`,"i")
         query.city= regExp
     }
+    let order = req.query.order
+    console.log(req.query)
     try {
         cities = await City.find(query)
         if (cities) {
+            switch (order) {
+                case "a-z":
+                    cities.sort((a, b) => a.city.localeCompare(b.city))
+                    break;
+                case "z-a":
+                    cities.sort((a, b) => a.city.localeCompare(b.city))
+                        .reverse()
+                    break;
+                case "up":
+                    cities.sort((a, b) => a.population - b.population)
+                    break;
+                case "down":
+                    cities.sort((a, b) => b.population - a.population)
+                    break;
+                default:
+                    break;
+            }
             res.status("200").json({
                 message: "The following cities were found.",
                 response: cities,

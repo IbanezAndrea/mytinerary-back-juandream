@@ -27,9 +27,8 @@ describe("PATCH /itineraries/:id", ()=>{
         request(app)
             .patch('/itineraries/632c98b6ca73ebf7e9bdfe67')
             .send({
-                name: "The best of Osaka!!!",
-                price: 4,
-                description: "Osaka is the compromise between the more progressive Tokyo and the more traditional Kyoto. This ultra-urban metropolis has been a key economic hub for Japan since the 16th century."
+                name: "The best of Osaka, the otaku paradise!",
+                price: 3,
             })
             .set({"Authorization": "Bearer " + token})
             .expect(200)
@@ -39,4 +38,31 @@ describe("PATCH /itineraries/:id", ()=>{
             })
     })
 
+})
+
+describe("GET /itineraries/auth", ()=>{
+
+    it("Must respond with The following itineraries were found.", (done)=>{
+            request(app)
+                .get('/itineraries/auth')
+                .set({"Authorization": "Bearer " + token})
+                .expect(200)
+                .end((err, res)=>{
+                    if (err) return done(err)
+                                return done()
+                })
+        })
+})
+
+describe("GET /itineraries/auth", ()=>{
+
+    it("Must respond with The following itineraries were found.", (done)=>{
+            request(app)
+                .get('/itineraries/auth')
+                .expect(401)
+                .end((err, res)=>{
+                    if (err) return done(err)
+                                return done()
+                })
+        })
 })

@@ -74,9 +74,9 @@ getCities: async (req, res)=>{
         let regExp= new RegExp(`^${req.query.city}`,"i")
         query.city= regExp
     }
-    if (req.query.country) {
+    if (req.query.country && req.query.country !== "none" ) {
         query.country = req.query.country
-    }
+        }
     let order = req.query.order
     try {
         cities = await City.find(query)

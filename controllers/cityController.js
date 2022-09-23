@@ -74,8 +74,10 @@ getCities: async (req, res)=>{
         let regExp= new RegExp(`^${req.query.city}`,"i")
         query.city= regExp
     }
+    if (req.query.country) {
+        query.country = req.query.country
+    }
     let order = req.query.order
-    console.log(req.query)
     try {
         cities = await City.find(query)
         if (cities) {
@@ -84,14 +86,25 @@ getCities: async (req, res)=>{
                     cities.sort((a, b) => a.city.localeCompare(b.city))
                     break;
                 case "z-a":
-                    cities.sort((a, b) => a.city.localeCompare(b.city))
-                        .reverse()
+                    cities.sort((a, b) => b.city.localeCompare(a.city))
                     break;
                 case "up":
                     cities.sort((a, b) => a.population - b.population)
                     break;
                 case "down":
                     cities.sort((a, b) => b.population - a.population)
+                    break;
+                case "old":
+                    cities.sort((a, b) => {
+                        let resultSort = new Date(a.foundation).getTime() - new Date(b.foundation).getTime()
+                        return resultSort
+                    })
+                    break;
+                case "new":
+                    cities.sort((a, b) => {
+                        let resultSort = new Date(b.foundation).getTime() - new Date(a.foundation).getTime()
+                        return resultSort
+                    })
                     break;
                 default:
                     break;

@@ -173,7 +173,7 @@ const userController ={
                                 response: {
                                     user: loginUser,
                                     token:token},
-                                message: "Welcome " + user.name
+                                message: `Welcome ${user.name}`
                             })
                         }else{ // if password does not match
                             res.status(401).json({
@@ -252,8 +252,7 @@ const userController ={
     getUser: async (req, res) => {
         const { id } = req.params
         try {
-            let user = await User.findOne({ _id: id })
-                .populate('itineraries', {name:1, city:1})
+            let user = await User.findOne({ _id: id })  
             if (user) {
                 res.status("200").json({
                     message: "Found ✔",
@@ -390,7 +389,7 @@ const userController ={
                         photo:req.user.photo
                     }
                 },
-                message: 'Welcome' + req.user.name+'!'
+                message: 'Welcome ' + req.user.name+'!'
             })
         }else {
             res.json({

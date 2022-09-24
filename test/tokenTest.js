@@ -56,7 +56,7 @@ describe("GET /itineraries/auth", ()=>{
 
 describe("GET /itineraries/auth", ()=>{
 
-    it("Must respond with The following itineraries were found.", (done)=>{
+    it("Must respond with Unahutorized", (done)=>{
             request(app)
                 .get('/itineraries/auth')
                 .expect(401)

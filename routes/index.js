@@ -8,7 +8,7 @@ const activitiesRoutes = require('./activities')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render( 'index', {title: 'Tu vieja'});
+  res.render( 'index', {title: 'My Tineraries'});
 });
 
 router.use('/cities',citiesRouter);

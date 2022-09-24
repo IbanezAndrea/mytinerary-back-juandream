@@ -2,7 +2,7 @@ const City = require('../models/City')
 const joi = require("joi")
 const validator = joi.object({
     city: joi.string().required(),
-    country: joi.string().required(),
+    country: joi.string().insensitive().required(),
     photo: joi.string().uri().required(),
     population: joi.number().integer().min(1000).max(1000000000).required(),
     foundation: joi.date().max(new Date()).required(),
@@ -75,7 +75,8 @@ getCities: async (req, res)=>{
         query.city= regExp
     }
     if (req.query.country && req.query.country !== "none" ) {
-        query.country = req.query.country
+       let regExp2 = new RegExp(`^${req.query.country}`,"i")
+        query.country = regExp2
         }
     let order = req.query.order
     try {

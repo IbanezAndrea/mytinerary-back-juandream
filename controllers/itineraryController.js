@@ -24,7 +24,7 @@ const validator = joi.object({
         .required() ,
     likes:
         joi.array()
-        .unique((a, b) => a.property === b.property)
+        .items(joi.hex())
         .required(),
     tags: 
         joi.array()

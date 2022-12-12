@@ -24,7 +24,7 @@ const validator = joi.object({
         .required() ,
     likes:
         joi.array()
-        .items(joi.hex())
+        .items(joi.string().hex())
         .required(),
     tags: 
         joi.array()
